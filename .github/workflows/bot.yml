@@ -1,0 +1,36 @@
+name: Run Discord Bot for 1 Hour
+
+on:
+  schedule:
+    - cron: "30 5 * * *"  # 매일 오후 3시에 실행 (UTC 기준)
+
+jobs:
+  run-for-one-hour:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3  # 저장소 코드를 가져옵니다.
+
+    - name: Setup Python
+      uses: actions/setup-python@v4  # Python 환경을 설정합니다.
+      with:
+        python-version: 3.13
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Start Discord Bot
+      env:
+        TOKEN: ${{ secrets.TOKEN }}
+        CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
+        ROLE_ID: ${{ secrets.ROLE_ID }}
+      run: |
+        echo "Starting Discord Bot..."
+        nohup python bot.py &  # 백그라운드에서 실행
+        echo $! > bot_pid.txt  # 프로세스 ID 저장
+        sleep 3600  # 1시간 대기
+        echo "Stopping Discord Bot..."
+        kill $(cat bot_pid.txt)  # 프로세스 종료
