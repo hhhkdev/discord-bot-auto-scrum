@@ -24,6 +24,8 @@ async def on_ready():
     print(f"{bot.user} 로그인 완료!")
     bot.loop.create_task(wait_until_target_time())  # 특정 시간에 실행하는 태스크 시작
 
+
+
 # 특정 시간까지 대기하고 스레드 생성
 async def wait_until_target_time():
     while True:
@@ -73,6 +75,11 @@ async def create_thread_with_mention():
         print(f"스레드 생성 완료: {thread_name}")
     except Exception as e:
         print(f"스레드 생성 중 오류 발생: {e}")
+
+# "!hello" 명령어 처리
+@bot.command(name="출석체크")
+async def hello(ctx):
+    await ctx.send(f"안녕하세요, {ctx.author.mention}! 😊")
 
 # 봇 실행
 bot.run(TOKEN)
