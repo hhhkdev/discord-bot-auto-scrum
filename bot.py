@@ -6,17 +6,17 @@ from datetime import datetime, time
 from dotenv import load_dotenv
 
 # 봇 초기 설정
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 intents.messages = True  # 메시지 관련 권한 활성화
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # 환경 설정
 load_dotenv()
 TOKEN=os.getenv("TOKEN")
-CHANNEL_ID=os.getenv("CHANNEL_ID")
-ROLE_ID=os.getenv("ROLE_ID")
+CHANNEL_ID=int(os.getenv("CHANNEL_ID"))
+ROLE_ID=int(os.getenv("ROLE_ID"))
 THREAD_CREATION_INTERVAL = 3600*24  # 1시간(3600초) 간격
-TARGET_TIME = time(21,0)
+TARGET_TIME = time(14,17)
 
 # 봇 준비 이벤트
 @bot.event
@@ -55,10 +55,21 @@ async def create_thread_with_mention():
     try:
         thread = await channel.create_thread(
             name=thread_name,
+            type=discord.ChannelType.public_thread,
             auto_archive_duration=1440
         )
         mention_message = f"<@&{ROLE_ID}> 스크럼 작성합시다."
+        template_message = """```
+* **:white_check_mark: Done**
+
+
+* **:mag:In progress**
+
+
+* **:eyes: Todo**
+```"""
         await thread.send(mention_message)
+        await thread.send(template_message)
         print(f"스레드 생성 완료: {thread_name}")
     except Exception as e:
         print(f"스레드 생성 중 오류 발생: {e}")
