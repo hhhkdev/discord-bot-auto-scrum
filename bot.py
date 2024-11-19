@@ -16,15 +16,13 @@ TOKEN=os.getenv("TOKEN")
 CHANNEL_ID=int(os.getenv("CHANNEL_ID"))
 ROLE_ID=int(os.getenv("ROLE_ID"))
 THREAD_CREATION_INTERVAL = 3600*24  # 1시간(3600초) 간격
-TARGET_TIME = time(14,17)
+TARGET_TIME = time(9,0)
 
 # 봇 준비 이벤트
 @bot.event
 async def on_ready():
     print(f"{bot.user} 로그인 완료!")
     bot.loop.create_task(wait_until_target_time())  # 특정 시간에 실행하는 태스크 시작
-
-
 
 # 특정 시간까지 대기하고 스레드 생성
 async def wait_until_target_time():
